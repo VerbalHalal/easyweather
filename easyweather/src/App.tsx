@@ -49,9 +49,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const weatherData = await getWeatherData();
-      //setTemperature(weatherData.temperature);
-      setCountry(weatherData.country_name);
-      setCity(weatherData.region_name);
+      setTemperature(weatherData.temperature);
+      setCountry(weatherData.country);
+      setCity(weatherData.region);
     }
     fetchData();
   }, [])
@@ -62,7 +62,7 @@ const App: React.FC = () => {
         <h2 style={locationStyle}>{city}, {country}</h2>
       </div>
       <div style={temperatureWrapperStyle}>
-        <h1 style={temperatureStyle}>{temperature}<span style={{"fontSize": "30px"}}>K</span></h1>
+        <h1 style={temperatureStyle}>{temperature}<span style={{"fontSize": "30px"}}>°C</span></h1>
         <h3 style={descriptionStyle}>Patches Of Fog</h3>
       </div>
     </div>
