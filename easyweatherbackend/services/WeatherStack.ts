@@ -10,12 +10,11 @@ interface WeatherStackData extends Document {
     }
     current: {
       temperature: string;
-      windSpeed: number;
-      windDegree: number;
-      cacheTime: number;
-      observationTime: string;
-      weatherDescriptions: [string];
-      uvIndex: number;
+      wind_speed: number;
+      wind_degree: number;
+      observation_time: string;
+      weather_descriptions: [string];
+      uv_index: number;
       pressure: number;
     }
   }

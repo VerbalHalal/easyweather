@@ -11,13 +11,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('build'));
 
-const PORT = 3001;
-
 app.get('/api/weatherdata', (req, res) => {
   const ip = req.ip;
-  const ipParts = ip.split(".");
+  const ipParts = ip.split(":")[3].split('.');
   const ipNumber = Number(ipParts[0]) * 256 * 256 * 256 + Number(ipParts[1]) * 256 * 256 + Number(ipParts[2]) * 256 + Number(ipParts[3]);
-  GeoData.findOne({ip_from: {"$lte": ipNumber || 755357696 }, ip_to: {"$gte": ipNumber || 755357696}})
+  GeoData.findOne({ip_from: {"$lte": ipNumber || 755357696 }, ip_to: {"$gte": ipNumber || 755357696}}) 
     .then(geodata => {
       if(geodata) {
         console.log("first");
@@ -30,7 +28,7 @@ app.get('/api/weatherdata', (req, res) => {
               res.json(weatherdata);
             } else {
               console.log("fourth");
-              WeatherStack.weatherStackQuery(geodata.region_name)
+              WeatherStack.weatherStackQuery(geodata.city_name)
                 .then((weatherstackdata) => {
                   console.log("fifth", weatherstackdata);
                   res.json({...weatherstackdata.data.location, ...weatherstackdata.data.current});
@@ -55,5 +53,5 @@ app.get('/api/ping', (_req, res) => {
 });
 
 app.listen(config.PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${config.PORT}`);
 });

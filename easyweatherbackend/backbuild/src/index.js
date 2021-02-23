@@ -13,10 +13,9 @@ const app = express_1.default();
 app.use(cors_1.default());
 app.use(express_1.default.json());
 app.use(express_1.default.static('build'));
-const PORT = 3001;
 app.get('/api/weatherdata', (req, res) => {
     const ip = req.ip;
-    const ipParts = ip.split(".");
+    const ipParts = ip.split(":")[3].split('.');
     const ipNumber = Number(ipParts[0]) * 256 * 256 * 256 + Number(ipParts[1]) * 256 * 256 + Number(ipParts[2]) * 256 + Number(ipParts[3]);
     GeoData_1.default.findOne({ ip_from: { "$lte": ipNumber || 755357696 }, ip_to: { "$gte": ipNumber || 755357696 } })
         .then(geodata => {
@@ -32,7 +31,7 @@ app.get('/api/weatherdata', (req, res) => {
                 }
                 else {
                     console.log("fourth");
-                    WeatherStack_1.default.weatherStackQuery(geodata.region_name)
+                    WeatherStack_1.default.weatherStackQuery(geodata.city_name)
                         .then((weatherstackdata) => {
                         console.log("fifth", weatherstackdata);
                         res.json(Object.assign(Object.assign({}, weatherstackdata.data.location), weatherstackdata.data.current));
@@ -55,5 +54,5 @@ app.get('/api/ping', (_req, res) => {
     res.send('pong');
 });
 app.listen(config_1.default.PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${config_1.default.PORT}`);
 });

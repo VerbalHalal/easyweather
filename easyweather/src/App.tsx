@@ -1,14 +1,7 @@
 import React, { useEffect } from "react";
 import {getWeatherData} from "./services/weather";
 
-const backgroundStyle = {
-  backgroundColor: "#163182",
-  height: "100vh",
-  width: "100vw",
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column" as const
-};
+
 
 const temperatureWrapperStyle = {
   flex: "3",
@@ -17,10 +10,16 @@ const temperatureWrapperStyle = {
 
 const temperatureStyle = {
   fontFamily: "Bebas Neue, cursive",
-  fontSize: "70px",
-  color: "white",
-  paddingLeft: "12px",
+  fontSize: "150px",
+  color: "black"
 };
+
+const temperatureSignStyle = {
+  fontFamily: "Bebas Neue, cursive",
+  fontSize: "80px",
+  color: "black",
+  width: "40px"
+}
 
 const locationWrapperStyle = {
   flex: "1"
@@ -30,31 +29,64 @@ const locationStyle = {
   marginTop: "10px",
   fontFamily: "Montserrat",
   fontSize: "20px",
-  color: "white",
+  color: "black",
 }
 
 const descriptionStyle = {
-  color: "white",
+  color: "black",
   fontFamily: "Bebas Neue, cursive",
-  fontSize: "22px",
+  fontSize: "30px",
   letterSpacing: "0.6px",
   paddingLeft: "10px"
 }
 
+const temperatureUnitStyle = {
+  fontFamily: "Bebas Neue, cursive",
+  fontSize: "40px",
+  color: "black",
+  width: "40px",
+  alignSelf: "flexEnd"
+}
+
 const App: React.FC = () => {
-  const [temperature, setTemperature] = React.useState<string>();
+  const [showTemperature, setShowTemperature] = React.useState<number>(0);
+  const [actualTemperature, setActualTemperature] = React.useState<number>();
   const [country, setCountry] = React.useState<string>();
   const [city, setCity] = React.useState<string>();
+  const [description, setDescription] = React.useState<string>();
+
+  const backgroundStyle = {
+    backgroundColor: `rgb(${190 + 0.1*showTemperature/(1+Math.abs(0.1*showTemperature)) * 56},${180 + 0.1*showTemperature/(1+Math.abs(0.1*showTemperature)) * -7},${131 + 0.1*showTemperature/(1+Math.abs(0.1*showTemperature)) * -86})`,
+    height: "100vh",
+    width: "100vw",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column" as const
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       const weatherData = await getWeatherData();
-      setTemperature(weatherData.temperature);
+      setActualTemperature(weatherData.temperature);
       setCountry(weatherData.country);
       setCity(weatherData.region);
+      setDescription(weatherData.weather_descriptions[0]);
     }
     fetchData();
   }, [])
+
+  useEffect(() => {
+    if(actualTemperature && actualTemperature != showTemperature) {
+      setTimeout(() => {
+        if((actualTemperature >= 0 && showTemperature + actualTemperature * 0.01 > actualTemperature) || (actualTemperature < 0 && showTemperature + actualTemperature * 0.01 < actualTemperature)) {
+          setShowTemperature(actualTemperature);
+          console.log(backgroundStyle.backgroundColor);
+        } else {
+          setShowTemperature(showTemperature + actualTemperature * 0.01);
+        }
+      }, Math.abs(showTemperature))
+    }
+  }, [actualTemperature, showTemperature]);
 
   return (
     <div style={backgroundStyle}>
@@ -62,8 +94,12 @@ const App: React.FC = () => {
         <h2 style={locationStyle}>{city}, {country}</h2>
       </div>
       <div style={temperatureWrapperStyle}>
-        <h1 style={temperatureStyle}>{temperature}<span style={{"fontSize": "30px"}}>°C</span></h1>
-        <h3 style={descriptionStyle}>Patches Of Fog</h3>
+        <div style={{"display": "flex", "justifyContent": "center", "alignItems": "center"}}>
+          <h3 style={temperatureSignStyle}>{Math.sign(showTemperature) ? "+" : "-"}</h3>
+          <h1 style={temperatureStyle}>{Math.round(showTemperature)}</h1>
+          <h3 style={temperatureUnitStyle}>°C</h3>
+        </div>
+        <h3 style={descriptionStyle}>{description}</h3>
       </div>
     </div>
   )

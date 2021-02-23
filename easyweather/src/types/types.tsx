@@ -1,12 +1,12 @@
 export interface WeatherData {
-  temperature: string;
+  temperature: number;
   country: string;
   region: string;
-  windSpeed: number;
-  windDegree: number;
+  wind_speed: number;
+  wind_degree: number;
   cacheTime: number;
   observationTime: string;
-  weatherDescriptions: [string];
-  uvIndex: number;
+  weather_descriptions: [string];
+  uv_index: number;
   pressure: number;
 }
