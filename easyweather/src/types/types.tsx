@@ -5,7 +5,7 @@ export interface WeatherData {
   wind_speed: number;
   wind_degree: number;
   cacheTime: number;
-  observationTime: string;
+  observation_time: string;
   weather_descriptions: [string];
   uv_index: number;
   pressure: number;

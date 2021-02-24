@@ -12,9 +12,13 @@ app.use(express.json());
 app.use(express.static('build'));
 
 app.get('/api/weatherdata', (req, res) => {
-  const ip = req.ip;
-  const ipParts = ip.split(":")[3].split('.');
-  const ipNumber = Number(ipParts[0]) * 256 * 256 * 256 + Number(ipParts[1]) * 256 * 256 + Number(ipParts[2]) * 256 + Number(ipParts[3]);
+  let ipNumber;
+  if(config.NODE_ENV == "PRODUCTION") {
+    const ip = req.ip;
+    const ipParts = ip.split(":")[3].split('.');
+    ipNumber = Number(ipParts[0]) * 256 * 256 * 256 + Number(ipParts[1]) * 256 * 256 + Number(ipParts[2]) * 256 + Number(ipParts[3]);
+  }
+  
   GeoData.findOne({ip_from: {"$lte": ipNumber || 755357696 }, ip_to: {"$gte": ipNumber || 755357696}}) 
     .then(geodata => {
       if(geodata) {

@@ -1,51 +1,94 @@
 import React, { useEffect } from "react";
 import {getWeatherData} from "./services/weather";
+import questionMarkIcon from './icons/question-sign.png';
+import settingsIcon from './icons/cog-wheel-silhouette.png';
 
-
-
-const temperatureWrapperStyle = {
-  flex: "3",
-  textAlign: "center" as const
-}
-
-const temperatureStyle = {
-  fontFamily: "Bebas Neue, cursive",
-  fontSize: "150px",
-  color: "black"
-};
-
-const temperatureSignStyle = {
-  fontFamily: "Bebas Neue, cursive",
-  fontSize: "80px",
-  color: "black",
-  width: "40px"
+const allStyle = {
+  position: 'relative' as const,
+  width: '100vw',
+  height: '100vh'
 }
 
 const locationWrapperStyle = {
-  flex: "1"
+  position: 'absolute' as const,
+  top: '10px',
+  width: '100%',
+  textAlign: 'center' as const
 }
 
 const locationStyle = {
-  marginTop: "10px",
   fontFamily: "Montserrat",
   fontSize: "20px",
-  color: "black",
+  color: "black"
 }
 
-const descriptionStyle = {
-  color: "black",
-  fontFamily: "Bebas Neue, cursive",
-  fontSize: "30px",
-  letterSpacing: "0.6px",
-  paddingLeft: "10px"
+const temperatureWrapperStyle = {
+  position: 'absolute' as const,
+  top: '30%',
+  left: '50%',
+  display: 'flex',
+  transform: 'translate(-50%, -50%)',
+  alignItems: 'center'
+}
+
+const temperatureStyle = {
+  fontFamily: 'IBM Plex Mono, monospace',
+  fontSize: "130px",
+  color: "black"
+}
+
+const temperatureSignStyle = {
+  fontFamily: 'IBM Plex Mono, monospace',
+  fontSize: "80px",
+  color: "black"
 }
 
 const temperatureUnitStyle = {
-  fontFamily: "Bebas Neue, cursive",
+  fontFamily: 'IBM Plex Mono, monospace',
   fontSize: "40px",
   color: "black",
-  width: "40px",
-  alignSelf: "flexEnd"
+  alignSelf: "baseline"
+}
+
+const observationTimeWrapperStyle = {
+  backgroundColor: 'lightgreen',
+  width: '100%',
+  position: 'absolute' as const,
+  top: '100%',
+  left: '50%',
+  transform: 'translate(-50%, -100%)',
+  textAlign: 'center' as const,
+}
+
+const observationTimeStyle = {
+  fontFamily: "Montserrat"
+}
+
+const temperatureDescriptionStyle = {
+  position: 'absolute' as const,
+  color: "black",
+  fontFamily: 'IBM Plex Mono, monospace',
+  fontSize: "30px",
+  letterSpacing: "0.6px",
+  top: 'calc(30% + 85px)',
+  width: '100%',
+  textAlign: 'center' as const
+}
+
+const questionMarkStyle = {
+  position: 'absolute' as const,
+  top: '10px',
+  left: '10px',
+  width: '24px',
+  height: '24px'
+}
+
+const settingsStyle = {
+  position: 'absolute' as const,
+  top: '10px',
+  right: '10px',
+  width: '24px',
+  height: '24px'
 }
 
 const App: React.FC = () => {
@@ -54,23 +97,31 @@ const App: React.FC = () => {
   const [country, setCountry] = React.useState<string>();
   const [city, setCity] = React.useState<string>();
   const [description, setDescription] = React.useState<string>();
-
+  const [observationTime, setObservationTime] = React.useState<string>();
+  /*
+  const backgroundTransitionCoefficient = Math.tanh(0.05*showTemperature);
+  
   const backgroundStyle = {
-    backgroundColor: `rgb(${190 + 0.1*showTemperature/(1+Math.abs(0.1*showTemperature)) * 56},${180 + 0.1*showTemperature/(1+Math.abs(0.1*showTemperature)) * -7},${131 + 0.1*showTemperature/(1+Math.abs(0.1*showTemperature)) * -86})`,
+    backgroundColor: `rgb(${166 + backgroundTransitionCoefficient * 89},${170 + backgroundTransitionCoefficient * -61},${163 + backgroundTransitionCoefficient * -87})`,
     height: "100vh",
     width: "100vw",
     display: "flex",
-    alignItems: "center",
     flexDirection: "column" as const
-  };
+  };*/
 
   useEffect(() => {
     const fetchData = async () => {
       const weatherData = await getWeatherData();
-      setActualTemperature(weatherData.temperature);
       setCountry(weatherData.country);
       setCity(weatherData.region);
       setDescription(weatherData.weather_descriptions[0]);
+      setActualTemperature(weatherData.temperature);
+      setObservationTime(weatherData.observation_time);
+      //setActualTemperature(-20);
+      //setCountry('Germany');
+      //setCity('Bayern');
+      //setDescription('Clear sky');
+      //setObservationTime('8:43 PM');
     }
     fetchData();
   }, [])
@@ -80,7 +131,6 @@ const App: React.FC = () => {
       setTimeout(() => {
         if((actualTemperature >= 0 && showTemperature + actualTemperature * 0.01 > actualTemperature) || (actualTemperature < 0 && showTemperature + actualTemperature * 0.01 < actualTemperature)) {
           setShowTemperature(actualTemperature);
-          console.log(backgroundStyle.backgroundColor);
         } else {
           setShowTemperature(showTemperature + actualTemperature * 0.01);
         }
@@ -89,20 +139,25 @@ const App: React.FC = () => {
   }, [actualTemperature, showTemperature]);
 
   return (
-    <div style={backgroundStyle}>
+    <div style={allStyle}>
+      <img src={questionMarkIcon} style={questionMarkStyle}/>
+      <img src={settingsIcon} style={settingsStyle}/>
       <div style={locationWrapperStyle}>
         <h2 style={locationStyle}>{city}, {country}</h2>
       </div>
       <div style={temperatureWrapperStyle}>
-        <div style={{"display": "flex", "justifyContent": "center", "alignItems": "center"}}>
-          <h3 style={temperatureSignStyle}>{Math.sign(showTemperature) ? "+" : "-"}</h3>
-          <h1 style={temperatureStyle}>{Math.round(showTemperature)}</h1>
-          <h3 style={temperatureUnitStyle}>°C</h3>
-        </div>
-        <h3 style={descriptionStyle}>{description}</h3>
+        <h2 style={temperatureSignStyle}>{Math.sign(showTemperature) == 1 ? '+' : '-'}</h2>
+        <h1 style={temperatureStyle}>{Math.abs(Math.round(showTemperature))}</h1>
+        <h2 style={temperatureUnitStyle}>°C</h2>
+      </div>
+      <div style={temperatureDescriptionStyle}>
+        <h2>{description}</h2>
+      </div>
+      <div style={observationTimeWrapperStyle}>
+        <h3 style={observationTimeStyle}>Observed at {observationTime}</h3>
       </div>
     </div>
-  )
+  );
 };
 
 export default App;

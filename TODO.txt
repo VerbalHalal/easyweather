@@ -1,0 +1,11 @@
+BACKEND:
+-on /api/weatherdata return only relevant information
+
+FRONTEND:
+-add a logo for the duration of loading
+-add more sites for different regions
+-import fonts locally
+-add settings:
+	-switching between Celsius, Fahrenheit & Kelvin
+	-switching observation time between 24hour and 12 hour system
+-change functionality for ip readout
