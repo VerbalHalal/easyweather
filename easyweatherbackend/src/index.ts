@@ -52,6 +52,10 @@ app.get('/api/weatherdata', (req, res) => {
     });
 });
 
+app.get('/api/geodata', (req, res) => {
+  res.send(req.ip);
+});
+
 app.get('/api/ping', (_req, res) => {
   res.send('pong');
 });

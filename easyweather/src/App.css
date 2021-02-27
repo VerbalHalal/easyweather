@@ -1,0 +1,137 @@
+/* --- "all" Wrapper --- */
+
+#all {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* --- Icons --- */
+
+#sunIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 128px;
+  width: 128px;
+  transition-duration: 400ms;
+  animation: spin 2s infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+#questionMarkIcon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 24px;
+  height: 24px;
+}
+
+#settingsIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+}
+
+/* --- Location --- */
+
+#locationWrapper {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+}
+
+#location {
+  font-family: Montserrat;
+  font-size: 20px;
+  color: black;
+  border: 0px;
+  text-align: center;
+  border-bottom: 1px solid black;
+  padding-bottom: 3px;
+}
+
+/* --- Temperature --- */
+
+#temperatureWrapper {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  display: flex;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+
+#temperatureSign {
+  font-family: IBM Plex Mono, monospace;
+  font-size: 80px;
+  color: black;
+}
+
+#temperatureUnit {
+  font-family: IBM Plex Mono, monospace;
+  font-size: 40px;
+  color: black;
+  align-self: baseline;
+}
+
+#temperature {
+  font-family: IBM Plex Mono, monospace;
+  font-size: 130px;
+}
+
+/* --- Observation Time --- */
+
+#observationTimeWrapper {
+  background-color: lightgreen;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  text-align: center;
+}
+
+#observationTime {
+  font-family: Montserrat
+}
+
+/* --- Description --- */
+
+#descriptionWrapper {
+  position: absolute;
+  top: calc(30% + 85px);
+  width: 100%;
+  text-align: center;
+}
+
+#description {
+  color: black;
+  font-family: IBM Plex Mono, monospace;
+  font-size: 50px;
+  letter-spacing: 0.6px;
+}
+
+/* --- Fonts --- */
+
+@font-face {
+  font-family: IBM Plex Mono;
+  src: url('fonts/IBMPlexMono-Bold.ttf');
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url('fonts/Montserrat-ExtraLight.ttf');
+}

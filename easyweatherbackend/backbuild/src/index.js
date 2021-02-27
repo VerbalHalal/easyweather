@@ -13,11 +13,14 @@ const app = express_1.default();
 app.use(cors_1.default());
 app.use(express_1.default.json());
 app.use(express_1.default.static('build'));
-app.get('/api/weatherdata', (_req, res) => {
-    /*const ip = req.ip;
-    const ipParts = ip.split(":")[3].split('.');
-    const ipNumber = Number(ipParts[0]) * 256 * 256 * 256 + Number(ipParts[1]) * 256 * 256 + Number(ipParts[2]) * 256 + Number(ipParts[3]);*/
-    GeoData_1.default.findOne({ ip_from: { "$lte": /*ipNumber ||*/ 755357696 }, ip_to: { "$gte": /*ipNumber ||*/ 755357696 } })
+app.get('/api/weatherdata', (req, res) => {
+    let ipNumber;
+    if (config_1.default.NODE_ENV == "PRODUCTION") {
+        const ip = req.ip;
+        const ipParts = ip.split(":")[3].split('.');
+        ipNumber = Number(ipParts[0]) * 256 * 256 * 256 + Number(ipParts[1]) * 256 * 256 + Number(ipParts[2]) * 256 + Number(ipParts[3]);
+    }
+    GeoData_1.default.findOne({ ip_from: { "$lte": ipNumber || 755357696 }, ip_to: { "$gte": ipNumber || 755357696 } })
         .then(geodata => {
         if (geodata) {
             console.log("first");
@@ -49,6 +52,9 @@ app.get('/api/weatherdata', (_req, res) => {
         .catch((error) => {
         console.error(error);
     });
+});
+app.get('/api/geodata', (req, res) => {
+    res.send(req.ip);
 });
 app.get('/api/ping', (_req, res) => {
     res.send('pong');
