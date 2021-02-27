@@ -15,7 +15,7 @@ app.get('/api/weatherdata/:query', (req, res) => {
   const {query} = req.params;
   if(query) {
     WeatherData
-      .findOne({$or: [{country: query}, {region: query}]})
+      .findOne({$or: [{country: query}, {region: query}, {query: query}]})
       .then(weatherdata => {
         const d = new Date();
         if(weatherdata && d.getTime() - weatherdata.cache_time < 300000) {
@@ -25,10 +25,12 @@ app.get('/api/weatherdata/:query', (req, res) => {
             .weatherStackQuery(query)
             .then((weatherstackdata) => {
               if(weatherstackdata.data) {
-                res.status(200).json(weatherstackdata.data);
-                const newWeatherData = new WeatherData({...weatherstackdata.data.current, ...weatherstackdata.data.location});
+                const newWeatherData = new WeatherData({...weatherstackdata.data.current, ...weatherstackdata.data.location, query: weatherstackdata.data.request?.query});
                 newWeatherData
                   .save()
+                  .then((newweatherdata) => {
+                    res.status(200).json(newweatherdata);
+                  })
                   .catch((e: string) => {
                     console.log(e);
                   });

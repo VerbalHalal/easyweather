@@ -4,6 +4,9 @@ import { Document } from "mongoose";
 
 interface WeatherStackData extends Document {
   data: {
+    request: {
+      query: string;
+    }
     location: {
       country: string;
       region: string;
