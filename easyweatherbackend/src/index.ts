@@ -18,14 +18,22 @@ app.get('/api/weatherdata/:query', (req, res) => {
       .findOne({$or: [{country: query}, {region: query}, {query: query}]})
       .then(weatherdata => {
         const d = new Date();
-        if(weatherdata && d.getTime() - weatherdata.cache_time < 300000) {
-          res.status(200).json(weatherdata);
+        if(weatherdata) {
+          if(d.getTime() - weatherdata.cache_time < 300000) {
+            res.status(200).json(weatherdata);
+          } else {
+            if(typeof weatherdata._id === 'string') 
+              <unknown>WeatherData.deleteOne({_id: weatherdata._id});
+          }
         } else {
           WeatherStack
             .weatherStackQuery(query)
             .then((weatherstackdata) => {
               if(weatherstackdata.data) {
-                const newWeatherData = new WeatherData({...weatherstackdata.data.current, ...weatherstackdata.data.location, query: weatherstackdata.data.request?.query});
+                const newWeatherData = new WeatherData({...weatherstackdata.data.current, 
+                  ...weatherstackdata.data.location, 
+                  query: weatherstackdata.data.request?.query, 
+                  cache_time: d.getTime()});
                 newWeatherData
                   .save()
                   .then((newweatherdata) => {
@@ -73,7 +81,8 @@ app.get('/api/geodata', (req, res) => {
 });
 
 app.get('/api/ping', (_req, res) => {
-  res.send('pong');
+  WeatherData.findOne({"$or": [{country: 'Bayern'}, {region: 'Bayern'}, {query: 'Bayern'}]})
+  .then((data) => res.send(data)).catch(() => 'oh no');
 });
 
 app.listen(config.PORT, () => {
