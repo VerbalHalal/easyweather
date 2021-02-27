@@ -4,7 +4,6 @@ import questionMarkIcon from './icons/question-sign.png';
 import settingsIcon from './icons/cog-wheel-silhouette.png';
 import sunIcon from './icons/sun.png';
 import "./App.css";
-import { setTokenSourceMapRange } from "typescript";
 
 const App: React.FC = () => {
   const [showTemperature, setShowTemperature] = React.useState<number>(0);
