@@ -24,10 +24,14 @@ app.get('/api/weatherdata/:query', (req, res) => {
           WeatherStack
             .weatherStackQuery(query)
             .then((weatherstackdata) => {
-              if(weatherstackdata) {
-                res.status(200).json(weatherstackdata);
-                const newWeatherData = new WeatherData(weatherstackdata);
-                <unknown>newWeatherData.save();
+              if(weatherstackdata.data) {
+                res.status(200).json(weatherstackdata.data);
+                const newWeatherData = new WeatherData({...weatherstackdata.data.current, ...weatherstackdata.data.location});
+                newWeatherData
+                  .save()
+                  .catch((e: string) => {
+                    console.log(e);
+                  });
               } else {
                 res.status(500).json({error: `Welp. This shouldn't happen!`});
               }
