@@ -15,6 +15,7 @@ interface WeatherStackData extends Document {
       temperature: string;
       wind_speed: number;
       wind_degree: number;
+      wind_dir: string;
       observation_time: string;
       weather_descriptions: [string];
       uv_index: number;

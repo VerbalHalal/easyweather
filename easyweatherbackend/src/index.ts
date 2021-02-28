@@ -21,39 +21,45 @@ app.get('/api/weatherdata/:query', (req, res) => {
         if(weatherdata) {
           if(d.getTime() - weatherdata.cache_time < 300000) {
             res.status(200).json(weatherdata);
+            return;
           } else {
-            if(typeof weatherdata._id === 'string') 
-              <unknown>WeatherData.deleteOne({_id: weatherdata._id});
-          }
-        } else {
-          WeatherStack
-            .weatherStackQuery(query)
-            .then((weatherstackdata) => {
-              if(weatherstackdata.data) {
-                const newWeatherData = new WeatherData({...weatherstackdata.data.current, 
-                  ...weatherstackdata.data.location, 
-                  query: weatherstackdata.data.request?.query, 
-                  cache_time: d.getTime()});
-                newWeatherData
-                  .save()
-                  .then((newweatherdata) => {
-                    res.status(200).json(newweatherdata);
-                  })
-                  .catch((e: string) => {
-                    console.log(e);
-                  });
-              } else {
-                res.status(500).json({error: `Welp. This shouldn't happen!`});
-              }
-            })
+            // Dont know how to             
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            weatherdata.delete()
             .catch((e: string) => {
-              res.status(500).json({error: `Error looking up WeatherData. ${e}`});
+              console.log(`Error upon deleting entry: ${e}`);
             });
+          }
         }
-      })
-      .catch((e: string) => {
-        res.status(500).json({error: `Error looking up cached WeatherData. ${e}`});
-      });
+        WeatherStack
+          .weatherStackQuery(query)
+          .then((weatherstackdata) => {
+            console.log(weatherstackdata.data);
+            if(weatherstackdata.data.current) {
+              const newWeatherData = new WeatherData({...weatherstackdata.data.current, 
+                ...weatherstackdata.data.location, 
+                query: weatherstackdata.data.request?.query, 
+                cache_time: d.getTime()});
+              newWeatherData
+                .save()
+                .then((newweatherdata) => {
+                  res.status(200).json(newweatherdata);
+                })
+                .catch((e: string) => {
+                  console.log(e);
+                });
+            } else {
+              res.status(500).json({error: `Welp. This shouldn't happen!`});
+            }
+          })
+          .catch((e: string) => {
+            res.status(500).json({error: `Error looking up WeatherData. ${e}`});
+          });
+        }
+      )
+    .catch((e: string) => {
+      res.status(500).json({error: `Error looking up cached WeatherData. ${e}`});
+    });
   } else {
     res.status(400).json({error: 'Unspecified query.'});
   }
@@ -80,9 +86,9 @@ app.get('/api/geodata', (req, res) => {
   }
 });
 
-app.get('/api/ping', (_req, res) => {
-  WeatherData.findOne({"$or": [{country: 'Bayern'}, {region: 'Bayern'}, {query: 'Bayern'}]})
-  .then((data) => res.send(data)).catch(() => 'oh no');
+app.get('/api/clearCache', (_req, res) => {
+  <unknown>WeatherData.deleteMany().catch(() => console.log('wow'));
+  res.send('yikes');
 });
 
 app.listen(config.PORT, () => {

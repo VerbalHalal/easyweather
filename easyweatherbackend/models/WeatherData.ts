@@ -6,6 +6,7 @@ interface IWeatherData extends Document {
   region: string;
   wind_speed: number;
   wind_degree: number;
+  wind_dir: string;
   cache_time: number;
   observation_time: string;
   weather_descriptions: [string];
@@ -25,7 +26,8 @@ const weatherDataSchema: Schema = new Schema({
   weather_descriptions: {type: [String], required: true},
   uv_index: {type: Number, required: true},
   pressure: {type: Number, required: true},
-  query: {type: String, required: true}
+  query: {type: String, required: true},
+  wind_dir: {type: String, required: true}
 }, {collection: 'WeatherData'});
 
 const WeatherData: Model<IWeatherData> = model('WeatherData', weatherDataSchema);

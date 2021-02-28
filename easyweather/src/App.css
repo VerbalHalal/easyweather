@@ -67,7 +67,7 @@
 
 #temperatureWrapper {
   position: absolute;
-  top: 30%;
+  top: 25%;
   left: 50%;
   display: flex;
   transform: translate(-50%, -50%);
@@ -97,7 +97,7 @@
 #observationTimeWrapper {
   background-color: lightgreen;
   width: 100%;
-  position: absolute;
+  position: fixed;
   top: 100%;
   left: 50%;
   transform: translate(-50%, -100%);
@@ -112,7 +112,7 @@
 
 #descriptionWrapper {
   position: absolute;
-  top: calc(30% + 85px);
+  top: calc(25% + 85px);
   width: 100%;
   text-align: center;
 }
@@ -120,9 +120,90 @@
 #description {
   color: black;
   font-family: IBM Plex Mono, monospace;
-  font-size: 50px;
+  font-size: 30px;
   letter-spacing: 0.6px;
 }
+
+/* --- Advanced information --- */
+
+#advancedInformationWrapper {
+  display: flex;
+  position: absolute;
+  top: calc(25% + 85px + 39px + 20px);
+  width: 100%;
+  align-items: center;
+  font-family: Montserrat;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+
+.advancedInformationDescription {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  text-decoration: underline;
+}
+
+.advancedInformationInformation {
+  margin-left: 15px;
+}
+
+#windWrapper {
+  display: flex;
+  align-items: center;
+}
+
+#uvIndexWrapper {
+  display: flex;
+  align-items: center;
+}
+
+#pressureWrapper {
+  display: flex;
+  align-items: center;
+}
+
+#compassIcon {
+  height: 64px;
+  transform: rotate(200deg);
+}
+
+#uvIndexIcon {
+  height: 64px;
+}
+
+#pressureIcon {
+  height: 64px;
+}
+
+
+/* --- Error --- */
+
+#error {
+  color: red;
+  font-family: Montserrat;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: 40px;
+}
+
+/* --- Seperator --- */
+
+.horizontalSeparator {
+  border-top:1px solid #5f656d;
+  height:1px;
+  position: absolute;
+  top: calc(25% + 85px + 39px + 10px);
+  width: 100%;
+}
+
+.verticalSeparator {
+  height: 64px;
+  margin-left: 20px;
+  border-left: 1px solid #5f656d;
+  width: 1px;
+}
+
 
 /* --- Fonts --- */
 
